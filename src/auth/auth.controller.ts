@@ -6,7 +6,7 @@ import {
   NotFoundException,
   Post,
   Req,
-  Res,
+  Res, UseGuards,
   UseInterceptors
 } from "@nestjs/common";
 import { UserService } from "../user/user.service";
@@ -15,6 +15,7 @@ import { RegisterDto } from "./models/register.dto";
 import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
 import { Request } from "express";
+import { AuthGuard } from "./auth.guard";
 
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -67,6 +68,7 @@ export class AuthController {
   }
 
 
+  @UseGuards(AuthGuard)
   @Get('user')
   async user(
     @Req() request: Request
@@ -78,6 +80,7 @@ export class AuthController {
   }
 
 
+  @UseGuards(AuthGuard)
   @Post('logout')
   async logout(@Res({passthrough: true}) response: Response) {
     response.clearCookie('jwt');
