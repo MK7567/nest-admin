@@ -4,7 +4,7 @@ import {
   Controller, Delete,
   Get,
   Param,
-  Post, Put,
+  Post, Put, Query,
   UseGuards,
   UseInterceptors
 } from "@nestjs/common";
@@ -16,6 +16,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { UserUpdateDto } from "./models/user.update.dto";
 
 
+
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
 @Controller('users')
@@ -25,9 +26,10 @@ export class UserController {
   }
 
   @Get()
-  async all(): Promise<User[]>{
-    return this.userService.all();
+  async all(@Query('page') page: number = 1): Promise<User[]>{
+    return this.userService.paginate(page);
   }
+
 
   @Post()
   async create(@Body() body: UserCreateDto): Promise<User> {
